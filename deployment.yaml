@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: branci21buggy-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: branci21buggy
+  template:
+    metadata:
+      labels:
+        app: branci21buggy
+    spec:
+      containers:
+      - name: branci21buggy
+        image: 851725524544.dkr.ecr.us-west-2.amazonaws.com/branci21
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+# service type loadbalancer       
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: branci21buggy
+    k8s-app: branci21buggy
+  name: branci21buggy
+spec:
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: 8080
+  type: LoadBalancer
+  selector:
+    app: branci21buggy
